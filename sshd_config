@@ -91,6 +91,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #PrintMotd yes
 #PrintLastLog yes
 #TCPKeepAlive yes
+#UsePrivilegeSeparation sandbox
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0

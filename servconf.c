@@ -662,7 +662,7 @@ static struct {
 	{ "clientalivecountmax", sClientAliveCountMax, SSHCFG_ALL },
 	{ "authorizedkeysfile", sAuthorizedKeysFile, SSHCFG_ALL },
 	{ "authorizedkeysfile2", sDeprecated, SSHCFG_ALL },
-	{ "useprivilegeseparation", sDeprecated, SSHCFG_GLOBAL},
+	{ "useprivilegeseparation", sUsePrivilegeSeparation, SSHCFG_GLOBAL},
 	{ "acceptenv", sAcceptEnv, SSHCFG_ALL },
 	{ "setenv", sSetEnv, SSHCFG_ALL },
 	{ "permittunnel", sPermitTunnel, SSHCFG_ALL },
@@ -1726,6 +1726,11 @@ process_server_config_line_depth(ServerOptions *options, char *line,
 		intptr = &options->disable_forwarding;
 		goto parse_flag;
 
+	case sUsePrivilegeSeparation:
+		intptr = &use_privsep;
+		multistate_ptr = multistate_privsep;
+		goto parse_multistate;
+
 	case sAllowUsers:
 		while ((arg = strdelim(&cp)) && *arg != '\0') {
 			if (match_user(NULL, NULL, NULL, arg) == -1)
@@ -2623,6 +2628,8 @@ fmt_intarg(ServerOpCodes code, int val)
 		return fmt_multistate_int(val, multistate_gatewayports);
 	case sCompression:
 		return fmt_multistate_int(val, multistate_compression);
+	case sUsePrivilegeSeparation:
+		return fmt_multistate_int(val, multistate_privsep);
 	case sAllowTcpForwarding:
 		return fmt_multistate_int(val, multistate_tcpfwd);
 	case sAllowStreamLocalForwarding:
@@ -2802,6 +2809,7 @@ dump_config(ServerOptions *o)
 	dump_cfg_fmtint(sDisableForwarding, o->disable_forwarding);
 	dump_cfg_fmtint(sAllowStreamLocalForwarding, o->allow_streamlocal_forwarding);
 	dump_cfg_fmtint(sStreamLocalBindUnlink, o->fwd_opts.streamlocal_bind_unlink);
+	dump_cfg_fmtint(sUsePrivilegeSeparation, use_privsep);
 	dump_cfg_fmtint(sFingerprintHash, o->fingerprint_hash);
 	dump_cfg_fmtint(sExposeAuthInfo, o->expose_userauth_info);
 

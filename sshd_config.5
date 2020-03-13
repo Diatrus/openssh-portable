@@ -1695,6 +1695,28 @@ is enabled, you will not be able to run
 as a non-root user.
 The default is
 .Cm no .
+.It Cm UsePrivilegeSeparation
+Specifies whether
+.Xr sshd 8
+separates privileges by creating an unprivileged child process
+to deal with incoming network traffic.
+After successful authentication, another process will be created that has
+the privilege of the authenticated user.
+The goal of privilege separation is to prevent privilege
+escalation by containing any corruption within the unprivileged processes.
+The argument must be
+.Cm yes ,
+.Cm no ,
+or
+.Cm sandbox .
+If
+.Cm UsePrivilegeSeparation
+is set to
+.Cm sandbox
+then the pre-authentication unprivileged process is subject to additional
+restrictions.
+The default is
+.Cm sandbox .
 .It Cm VersionAddendum
 Optionally specifies additional text to append to the SSH protocol banner
 sent by the server upon connection.
